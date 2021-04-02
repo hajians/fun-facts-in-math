@@ -1,0 +1,105 @@
+\documentclass[11pt]{article}
+
+\usepackage{sectsty}
+\usepackage{graphicx}
+\usepackage{ulem}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Ex}{\mathbb{E}}
+\newcommand{\Pro}{\mathbb{P}}
+\newcommand{\dx}{\text{d}x}
+
+% Margins
+%% \topmargin=-0.45in
+%% \evensidemargin=0in
+%% \oddsidemargin=0in
+%% \textwidth=6.5in
+%% \textheight=9.0in
+%% \headsep=0.25in
+
+\title{Fun facts in mathematics}
+\author{Soheil Hajian}
+\date{\today}
+
+\begin{document}
+\maketitle	
+% Optional TOC
+\tableofcontents
+\pagebreak
+
+%--Paper--
+\section{Probability theory}
+\subsection{Chebyshev inequality}
+Let $X$ be a continuous random variable with density function
+$f_X(x)$, mean $\mu$ and standard deviation $\sigma$. Then the
+following inequality holds
+\begin{equation} \label{eq:chebyshev-ineq}
+  \Pro(|X-\mu| \geq k \sigma) \leq \frac{1}{k^2}, \quad \forall k \geq
+  1.
+\end{equation}
+In order to prove (\ref{eq:chebyshev-ineq}) we use definition of
+the probability and standard deviation of $X$:
+\begin{equation}
+  \begin{array}{rcl}
+    \Pro(|X-\mu| \geq k \sigma) &=& \int_{|x-\mu|\geq k\sigma} f_X(x)
+    \dx
+    \\
+    &\leq& \int_{|x-\mu|\geq k\sigma} \frac{|x-\mu|^2}{(k\sigma)^2}
+    f_X(x) \dx
+    \\
+    &\leq& \int_{\R} \frac{|x-\mu|^2}{(k\sigma)^2}
+    f_X(x) \dx
+    \\
+    &=& \frac{\sigma^2}{(k\sigma)^2}
+    \\ &=& \frac{1}{k^2}.
+  \end{array}
+\end{equation}
+%
+\subsection{Law of large numbers}
+Let us consider a sequence of independent and identically distributed
+(i.i.d.) samples $(X_1, X_2, \dots, X_n)$ from a common random
+variable $X$. The law of large numbers states that the mean of the
+above sequence converges to the mean of $X$ as $n$ grows to
+infinity. That is
+\begin{equation}
+  \bar{X}_n \rightarrow \mu \text{ as }
+  n \rightarrow \infty,
+\end{equation}
+where
+\begin{equation}
+  \bar{X}_n = \frac{X_1 + X_2 + \cdots + X_n}{n},
+\end{equation}
+and $\mu = \mathbb{E}(X)$. Convergence should be understood in the
+sense of almost surely (a.s.) which corresponds to the strong law of
+large numbers. The weak law of large numbers corresponds to the
+convergence in probability of the mean of the samples to the mean of
+$X$.
+
+Here we prove the weak law of large numbers for the case when $X$ is
+continuous random variable. From Chebyshev inequality
+(\ref{eq:chebyshev-ineq}) we have for the random variable $\bar{X}_n$
+\begin{equation} 
+  \Pro(|\bar{X}_n-\mu| \geq \varepsilon) \leq
+  \frac{\sigma_{\bar{X}_n}^2}{\varepsilon^2},
+\end{equation}
+where we set $\varepsilon = k \sigma_{\bar{X}_n}$. On the other hand
+from the definition of $\bar{X}_i$ we can conclude that
+\begin{equation*}
+  \sigma_{\bar{X}_n} = \frac{1}{\sqrt{n}} \sigma_X.
+\end{equation*}
+If $\sigma_X$ is finite we can conclude that 
+\begin{equation*} 
+  \Pro(|\bar{X}_n-\mu| \geq \varepsilon) \leq
+  \frac{\sigma_{X}^2}{n \varepsilon^2},
+\end{equation*}
+and therefore
+\begin{equation} 
+  1- \frac{\sigma_{X}^2}{n \varepsilon^2} \leq
+  \Pro(|\bar{X}_n-\mu| \leq \varepsilon) \leq
+  1, \quad \forall \varepsilon > 0.
+\end{equation}
+Letting $n \rightarrow 0$ yields that $ \Pro(|\bar{X}_n-\mu| \leq
+\varepsilon) \rightarrow 1$ for all $\varepsilon > 0$.
+\end{document}
