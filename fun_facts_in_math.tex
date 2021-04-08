@@ -9,7 +9,11 @@
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\Ex}{\mathbb{E}}
 \newcommand{\Pro}{\mathbb{P}}
+\newcommand{\D}{\mathcal{D}}
+\newcommand{\q}{\textsf{q}}
+\newcommand{\Lsp}{\mathrm{L}}
 \newcommand{\dx}{\text{d}x}
+\newcommand{\norm}[1]{\Vert #1 \Vert}
 
 % Margins
 %% \topmargin=-0.45in
@@ -30,6 +34,8 @@
 \pagebreak
 
 %--Paper--
+\section{(Numerical) linear algebra}
+\subsection{Rayleigh quotient} \label{sec:rayleigh}
 \section{Probability theory}
 \subsection{Chebyshev inequality}
 Let $X$ be a continuous random variable with density function
@@ -102,4 +108,42 @@ and therefore
 \end{equation}
 Letting $n \rightarrow 0$ yields that $ \Pro(|\bar{X}_n-\mu| \leq
 \varepsilon) \rightarrow 1$ for all $\varepsilon > 0$.
+
+\section{Pattern recognition}
+\subsection{Linear discriminant analysis}
+In this section we introduce a method to find a subspace that that aims to maximize the distance between data points belonging to different classes (intra-classes distance) while minimizing the distance of data points belonging to the same class (inter-classes).
+
+Let us denote the dataset by the tuple $(X, y)$ where $X \in \R^{n \times p}$ is the so-called feature matrix, and $y \in \R^{n}$ is the target vector. Here $p$ denotes the number of data points in the dataset and $n$ is the dimension of the feature space. 
+
+Each column of $X$ corresponds to the features of a data point which we denote by $x^{(j)} \in \R^{n}$, and similarly each entry of $y$, i.e., $y^{(j)}$ corresponds to the class of the data point $j$, for all $j=1,\dots, p$. We consider that each data point can belong to one and only one class, and we denote the total number of classes by $K$. That is $y^{(j)} \in \{1,\dots, K\}$ for all $j=1,\dots, p$.
+
+
+\subsubsection{Scatter matrices and spread}
+Let us denote the projection of the features of a data point, $x^{(j)}$, into a normalized vector $\q \in \R^{n}$ by $z^{(j)}$, and for all data points by $z := \q^\top X$. A measure of the spread of projected values can be define by the Euclidean $2$-norm, $\norm{z}_2$:
+\begin{equation}
+	\norm{z}_2 = \q^\top X X^\top \q.
+\end{equation}
+The matrix $X^\top X$ is called the scatter matrix and we denote it by $S \in \R^{n\times n}$. Note that from the definition of $S$ we can conclude that $S$ is symmetric and at least positive semi-definite. Therefore maximizing the spread corresponds to finding the normalized vector $\q$ that maximizes $\q^\top S \q$, which by Rayleigh quotient (see Section \ref{sec:rayleigh}) corresponds to the eigenvector of $S$ corresponding to the maximum eigenvalue of $S$.
+
+We will now define two metrics: intra-class and inter-class spread of the dataset. It is convenient to define first the set of data points that belong to the same class. Let us define the set of data points belonging to the same class by
+\begin{equation}
+	\D_k := \big\{ j : y^{(j)} = k, \quad \forall j=1,\dots,p \big\},
+\end{equation}
+for all $k = 1, \dots, K$. This then motivates to rearrange the feature matrix, $X$, such that data points belonging to the same class be adjacent to each other:
+\begin{equation}
+	X = [X_1, X_2, \dots, X_K],
+\end{equation}
+and similarly the target vector $y = (y_1, \dots, y_K)^\top$. Note that each matrix $X_k$ can have a different size, i.e.,  $X_k \in \R^{n \times p_k}$ for all $k = 1, \dots, K$.
+
+In order to define the inter-class spread, we first translate each class the data points to the origin. The center of a class is defined by
+\begin{equation}
+	c_k := \frac{1}{|\D_k|} \sum_{x \in \D_k} x.
+\end{equation}
+We then define the centered feature matrix of each class by
+\begin{equation}
+	X_{k, c} := \Big[x^{(j_1)}-c_k, \quad x^{(j_2)}-c_k, \quad \dots, 
+	\quad x^{(j_{p_k})}-c_k \Big],
+\end{equation}
+and the centered feature matrix by $X_w = [X_{1, c}, \dots, X_{K, c}]$.
+The inter-class spread matrix is then defined by $S_w := X_w^{} X_w^{\top}$.
 \end{document}
