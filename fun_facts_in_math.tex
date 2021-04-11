@@ -1,19 +1,12 @@
 \documentclass[11pt]{article}
 
-\usepackage{sectsty}
-\usepackage{graphicx}
-\usepackage{ulem}
-\usepackage{amsmath}
-\usepackage{amsfonts}
+\usepackage{sectsty} \usepackage{graphicx} \usepackage{ulem}
+\usepackage{amsmath} \usepackage{amsfonts}
 
-\newcommand{\R}{\mathbb{R}}
-\newcommand{\Ex}{\mathbb{E}}
-\newcommand{\Pro}{\mathbb{P}}
-\newcommand{\D}{\mathcal{D}}
-\newcommand{\q}{\textsf{q}}
-\newcommand{\Lsp}{\mathrm{L}}
-\newcommand{\dx}{\text{d}x}
-\newcommand{\norm}[1]{\Vert #1 \Vert}
+\newcommand{\R}{\mathbb{R}} \newcommand{\Ex}{\mathbb{E}}
+\newcommand{\Pro}{\mathbb{P}} \newcommand{\D}{\mathcal{D}}
+\newcommand{\q}{\textsf{q}} \newcommand{\Lsp}{\mathrm{L}}
+\newcommand{\dx}{\text{d}x} \newcommand{\norm}[1]{\Vert #1 \Vert}
 
 % Margins
 %% \topmargin=-0.45in
@@ -23,12 +16,10 @@
 %% \textheight=9.0in
 %% \headsep=0.25in
 
-\title{Fun facts in mathematics}
-\author{Soheil Hajian}
-\date{\today}
+\title{Fun facts in mathematics} \author{Soheil Hajian} \date{\today}
 
 \begin{document}
-\maketitle	
+\maketitle
 % Optional TOC
 \tableofcontents
 \pagebreak
@@ -45,21 +36,15 @@ following inequality holds
   \Pro(|X-\mu| \geq k \sigma) \leq \frac{1}{k^2}, \quad \forall k \geq
   1.
 \end{equation}
-In order to prove (\ref{eq:chebyshev-ineq}) we use definition of
-the probability and standard deviation of $X$:
+In order to prove (\ref{eq:chebyshev-ineq}) we use definition of the
+probability and standard deviation of $X$:
 \begin{equation}
   \begin{array}{rcl}
     \Pro(|X-\mu| \geq k \sigma) &=& \int_{|x-\mu|\geq k\sigma} f_X(x)
-    \dx
-    \\
-    &\leq& \int_{|x-\mu|\geq k\sigma} \frac{|x-\mu|^2}{(k\sigma)^2}
-    f_X(x) \dx
-    \\
-    &\leq& \int_{\R} \frac{|x-\mu|^2}{(k\sigma)^2}
-    f_X(x) \dx
-    \\
-    &=& \frac{\sigma^2}{(k\sigma)^2}
-    \\ &=& \frac{1}{k^2}.
+    \dx \\ &\leq& \int_{|x-\mu|\geq k\sigma}
+    \frac{|x-\mu|^2}{(k\sigma)^2} f_X(x) \dx \\ &\leq& \int_{\R}
+    \frac{|x-\mu|^2}{(k\sigma)^2} f_X(x) \dx \\ &=&
+    \frac{\sigma^2}{(k\sigma)^2} \\ &=& \frac{1}{k^2}.
   \end{array}
 \end{equation}
 %
@@ -70,8 +55,7 @@ variable $X$. The law of large numbers states that the mean of the
 above sequence converges to the mean of $X$ as $n$ grows to
 infinity. That is
 \begin{equation}
-  \bar{X}_n \rightarrow \mu \text{ as }
-  n \rightarrow \infty,
+  \bar{X}_n \rightarrow \mu \text{ as } n \rightarrow \infty,
 \end{equation}
 where
 \begin{equation}
@@ -95,55 +79,137 @@ from the definition of $\bar{X}_i$ we can conclude that
 \begin{equation*}
   \sigma_{\bar{X}_n} = \frac{1}{\sqrt{n}} \sigma_X.
 \end{equation*}
-If $\sigma_X$ is finite we can conclude that 
+If $\sigma_X$ is finite we can conclude that
 \begin{equation*} 
-  \Pro(|\bar{X}_n-\mu| \geq \varepsilon) \leq
-  \frac{\sigma_{X}^2}{n \varepsilon^2},
+  \Pro(|\bar{X}_n-\mu| \geq \varepsilon) \leq \frac{\sigma_{X}^2}{n
+    \varepsilon^2},
 \end{equation*}
 and therefore
 \begin{equation} 
-  1- \frac{\sigma_{X}^2}{n \varepsilon^2} \leq
-  \Pro(|\bar{X}_n-\mu| \leq \varepsilon) \leq
-  1, \quad \forall \varepsilon > 0.
+  1- \frac{\sigma_{X}^2}{n \varepsilon^2} \leq \Pro(|\bar{X}_n-\mu|
+  \leq \varepsilon) \leq 1, \quad \forall \varepsilon > 0.
 \end{equation}
 Letting $n \rightarrow 0$ yields that $ \Pro(|\bar{X}_n-\mu| \leq
 \varepsilon) \rightarrow 1$ for all $\varepsilon > 0$.
 
 \section{Pattern recognition}
 \subsection{Linear discriminant analysis}
-In this section we introduce a method to find a subspace that that aims to maximize the distance between data points belonging to different classes (intra-classes distance) while minimizing the distance of data points belonging to the same class (inter-classes).
+In this section we introduce a method to find a subspace that that
+aims to maximize the distance between data points belonging to
+different classes (intra-classes distance) while minimizing the
+distance of data points belonging to the same class (inter-classes).
 
-Let us denote the dataset by the tuple $(X, y)$ where $X \in \R^{n \times p}$ is the so-called feature matrix, and $y \in \R^{n}$ is the target vector. Here $p$ denotes the number of data points in the dataset and $n$ is the dimension of the feature space. 
+Let us denote the dataset by the tuple $(X, y)$ where $X \in \R^{n
+  \times p}$ is the so-called feature matrix, and $y \in \R^{n}$ is
+the target vector. Here $p$ denotes the number of data points in the
+dataset and $n$ is the dimension of the feature space.
 
-Each column of $X$ corresponds to the features of a data point which we denote by $x^{(j)} \in \R^{n}$, and similarly each entry of $y$, i.e., $y^{(j)}$ corresponds to the class of the data point $j$, for all $j=1,\dots, p$. We consider that each data point can belong to one and only one class, and we denote the total number of classes by $K$. That is $y^{(j)} \in \{1,\dots, K\}$ for all $j=1,\dots, p$.
+Each column of $X$ corresponds to the features of a data point which
+we denote by $x^{(j)} \in \R^{n}$, and similarly each entry of $y$,
+i.e., $y^{(j)}$ corresponds to the class of the data point $j$, for
+all $j=1,\dots, p$. We consider that each data point can belong to one
+and only one class, and we denote the total number of classes by
+$K$. That is $y^{(j)} \in \{1,\dots, K\}$ for all $j=1,\dots, p$.
 
 
 \subsubsection{Scatter matrices and spread}
-Let us denote the projection of the features of a data point, $x^{(j)}$, into a normalized vector $\q \in \R^{n}$ by $z^{(j)}$, and for all data points by $z := \q^\top X$. A measure of the spread of projected values can be define by the Euclidean $2$-norm, $\norm{z}_2$:
+Let us denote the projection of the features of a data point,
+$x^{(j)}$, into a normalized vector $\q \in \R^{n}$ by $z^{(j)}$, and
+for all data points by $z := \q^\top X$. A measure of the spread of
+projected values can be define by the Euclidean $2$-norm,
+$\norm{z}_2$:
 \begin{equation}
-	\norm{z}_2 = \q^\top X X^\top \q.
+  \norm{z}_2 = \q^\top X X^\top \q.
 \end{equation}
-The matrix $X^\top X$ is called the scatter matrix and we denote it by $S \in \R^{n\times n}$. Note that from the definition of $S$ we can conclude that $S$ is symmetric and at least positive semi-definite. Therefore maximizing the spread corresponds to finding the normalized vector $\q$ that maximizes $\q^\top S \q$, which by Rayleigh quotient (see Section \ref{sec:rayleigh}) corresponds to the eigenvector of $S$ corresponding to the maximum eigenvalue of $S$.
+The matrix $X^\top X$ is called the scatter matrix and we denote it by
+$S \in \R^{n\times n}$. Note that from the definition of $S$ we can
+conclude that $S$ is symmetric and at least positive
+semi-definite. Therefore maximizing the spread corresponds to finding
+the normalized vector $\q$ that maximizes $\q^\top S \q$, which by
+Rayleigh quotient (see Section \ref{sec:rayleigh}) corresponds to the
+eigenvector of $S$ corresponding to the maximum eigenvalue of $S$.
 
-We will now define two metrics: intra-class and inter-class spread of the dataset. It is convenient to define first the set of data points that belong to the same class. Let us define the set of data points belonging to the same class by
+We will now define two metrics: intra-class and inter-class spread of
+the dataset. It is convenient to define first the set of data points
+that belong to the same class. Let us define the set of data points
+belonging to the same class by
 \begin{equation}
-	\D_k := \big\{ j : y^{(j)} = k, \quad \forall j=1,\dots,p \big\},
+  \D_k := \big\{ j : y^{(j)} = k, \quad \forall j=1,\dots,p \big\},
 \end{equation}
-for all $k = 1, \dots, K$. This then motivates to rearrange the feature matrix, $X$, such that data points belonging to the same class be adjacent to each other:
+for all $k = 1, \dots, K$. This then motivates to rearrange the
+feature matrix, $X$, such that data points belonging to the same class
+be adjacent to each other:
 \begin{equation}
-	X = [X_1, X_2, \dots, X_K],
+  X = [X_1, X_2, \dots, X_K],
 \end{equation}
-and similarly the target vector $y = (y_1, \dots, y_K)^\top$. Note that each matrix $X_k$ can have a different size, i.e.,  $X_k \in \R^{n \times p_k}$ for all $k = 1, \dots, K$.
+and similarly the target vector $y = (y_1, \dots, y_K)^\top$. Note
+that each matrix $X_k$ can have a different size, i.e., $X_k \in \R^{n
+  \times p_k}$ for all $k = 1, \dots, K$.
 
-In order to define the inter-class spread, we first translate each class the data points to the origin. The center of a class is defined by
+In order to define the intra-class spread, we first translate each
+class the data points to the origin. The center of a class is defined
+by
 \begin{equation}
-	c_k := \frac{1}{|\D_k|} \sum_{x \in \D_k} x.
+  c_k := \frac{1}{|\D_k|} \sum_{x \in \D_k} x.
 \end{equation}
 We then define the centered feature matrix of each class by
 \begin{equation}
-	X_{k, c} := \Big[x^{(j_1)}-c_k, \quad x^{(j_2)}-c_k, \quad \dots, 
-	\quad x^{(j_{p_k})}-c_k \Big],
+  X_{k, c} := \Big[x^{(j_1)}-c_k, \quad x^{(j_2)}-c_k, \quad \dots,
+    \quad x^{(j_{p_k})}-c_k \Big],
 \end{equation}
-and the centered feature matrix by $X_w = [X_{1, c}, \dots, X_{K, c}]$.
-The inter-class spread matrix is then defined by $S_w := X_w^{} X_w^{\top}$.
+and the centered feature matrix by $X_w = [X_{1, c}, \dots, X_{K,
+    c}]$.  The intra-class spread matrix is then defined by $S_w :=
+X_w^{} X_w^{\top}$. We now focus on defining inter-class spread. Let
+us define the global centroid of the data by
+\begin{equation}
+	c := \frac{1}{p} \sum_{i=1}^{p} x^{(i)}.
+\end{equation}
+We would like to measure the distance of the centroid of each cluster
+to the global centroid. Therefore we define the following matrix
+\begin{equation}
+	\bar{X} := [ \underbrace{(c_1 - c), \dots, (c_1 - c)}_{p_1
+            \text{ times}}, \dots, \underbrace{(c_k - c), \dots, (c_k
+            - c)}_{p_k \text{ times}}] \in \R^{n \times p},
+\end{equation}
+whose columns measures the distance of each centroid to the global
+centroid. Finally the inter-class spread matrix can be defined by
+\begin{equation}
+	S_b := \bar{X} \bar{X}^{\top}.
+\end{equation}
+
+As we discussed earlier in this section, we would like to maximize
+inter-class spread while minimizing the intra-class spread. To do so
+we can scalarize the above two metrics by defining the following
+scalar function:
+\begin{equation}
+	H(\q) := \frac{ \q^{\top}_{} S_{b}^{} \q }{\q^{\top}_{}
+          S_{w}^{} \q}, \quad \forall q \in \R^{n}, q \not = 0.
+\end{equation}
+Any direction $\q$ that maximizes $H(\q)$ can be viewed as a desirable
+direction maximizes the ratio of the spread of inter-class over the
+spread of the intra-class. Note that such direction does not
+necessarily maximizes spread of inter-class and minimizes spread of
+intra-class simultaneously.
+
+Let us suppose for the moment that $S_w$ is symmetric positive
+definite (s.p.d.). Then using Rayleigh quotient of Section
+\ref{sec:rayleigh} we can conclude that the maximum value of $H(q)$
+corresponds to the maximum eigenvalue of $S_w^{-1} S_b$ and the
+optimum direction is the corresponding eigenvector of $S_w^{-1} S_b$,
+i.e.,
+\begin{equation}
+	v_{\max} = \arg \max_{\q\in \R^{n}} H(\q),
+\end{equation}
+where
+\begin{equation}
+	S_w^{-1} S_b \, v_{\max} = \lambda_{\max} \, v_{\max}.
+\end{equation}
+For the case where $S_w$ is only semi-definite, we can use the
+argument that $S_w^{-1}$ exists. One approach would be to regularize
+$S_w$ to an s.p.d. matrix by adding an s.p.d. matrix, e.g.,
+\begin{equation}
+	S_{w,\varepsilon} := S_w + \varepsilon I, \quad \varepsilon >
+        0.
+\end{equation}
+Here $\varepsilon$ is a small positive real number.
 \end{document}
