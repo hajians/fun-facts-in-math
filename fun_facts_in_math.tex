@@ -3,11 +3,20 @@
 \usepackage{sectsty} \usepackage{graphicx} \usepackage{ulem}
 \usepackage{amsmath} \usepackage{amsfonts}
 
-\newcommand{\R}{\mathbb{R}} \newcommand{\Ex}{\mathbb{E}}
-\newcommand{\Pro}{\mathbb{P}} \newcommand{\D}{\mathcal{D}}
-\newcommand{\q}{\textsf{q}} \newcommand{\Lsp}{\mathrm{L}}
-\newcommand{\dx}{\text{d}x} \newcommand{\norm}[1]{\Vert #1 \Vert}
+\newcommand{\w}{\textbf{w}} 
+\newcommand{\R}{\mathbb{R}} 
+\newcommand{\B}{\mathbb{B}} 
+\newcommand{\Ex}{\mathbb{E}}
+\newcommand{\Pro}{\mathbb{P}} 
+\newcommand{\D}{\mathcal{D}}
+\newcommand{\q}{\textsf{q}} 
+\newcommand{\Lsp}{\mathrm{L}}
+\newcommand{\dx}{\text{d}x} 
+\newcommand{\norm}[1]{\Vert #1 \Vert}
 
+\usepackage{xcolor}
+
+\newcommand{\red}[1]{{\color{red}#1}}
 % Margins
 %% \topmargin=-0.45in
 %% \evensidemargin=0in
@@ -26,7 +35,7 @@
 
 %--Paper--
 \section{(Numerical) linear algebra}
-\subsection{Rayleigh quotient} \label{sec:rayleigh}
+\subsection{\red{Rayleigh quotient}} \label{sec:rayleigh}
 \section{Probability theory}
 \subsection{Chebyshev inequality}
 Let $X$ be a continuous random variable with density function
@@ -100,7 +109,7 @@ different classes (intra-classes distance) while minimizing the
 distance of data points belonging to the same class (inter-classes).
 
 Let us denote the dataset by the tuple $(X, y)$ where $X \in \R^{n
-  \times p}$ is the so-called feature matrix, and $y \in \R^{n}$ is
+  \times p}$ is the so-called feature matrix, and $y \in \B^{p}$ is
 the target vector. Here $p$ denotes the number of data points in the
 dataset and $n$ is the dimension of the feature space.
 
@@ -212,4 +221,24 @@ $S_w$ to an s.p.d. matrix by adding an s.p.d. matrix, e.g.,
         0.
 \end{equation}
 Here $\varepsilon$ is a small positive real number.
+\subsection{Logistic regression}
+Logistic regression is considered as a simple method for the classification problem. It is considered as a discriminative classification method since it models the posterior probability of the target variable directly. Let us denote as before the dataset by the tuple $(X, y)$ where $X \in \R^{n
+  \times p}$ is the so-called feature matrix, and $y \in \B^{p}$ is the target vector. Here $p$ denotes the number of data points in the dataset and $n$ is the dimension of the feature space. Logistic regression models the posterior probability of the target variable directly through a sigmoid function, i.e.,
+\begin{equation}
+	\Pro(y=1|x) = \sigma( \w^\top x + w_0), \quad \w \in \R^{n}, w_0 \in \R,
+\end{equation}
+and from the definition of the probabilities we have that $\Pro(y=0|x) = 1 - \Pro(y=1|x)$.
+
+Here $\sigma(a) := 1/(1+\exp(-a))$. Note that when $\w^\top x + w_0 = 0$ then $\Pro(y=0|x) = \Pro(y=1|x) = \frac12$ and we can conclude that the logistic regression model does not prefer one class over the other given the input $x$. Such a $(n-1)$-dimensional hyperplane is called the decision surface. Logistic regression is called a linear classification method since its decision boundary is a linear function of the input $x$.
+
+In order to find optimal parameters of logistic regression model, i.e., $\w$ and $w_0$, we first form a log-likelihood function over the posterior distribution and then maximize it. More precisely for a given logistic model (fixed $\w$ and $w_0$) the probability of observing $(y^{(j)}, x^{(j)})$ is given by 
+\begin{equation}
+	\Pro\big((y^{(j)}, x^{(j)})| \w, w_0\big) = 
+	\Pro(y^{(j)}=1|x^{(j)})^{y^{(j)}} \cdot
+	\Pro(y^{(j)}=0|x^{(j)})^{(1-y^{(j)})}.
+\end{equation}
+Since observations of the dataset are i.i.d.~we can conclude that the probability of observing the dataset given the model is the multiplication of the above likelihood function, i.e.,
+\begin{equation}
+	\Pro\big((y, X)| \w, w_0\big) = \prod_{j=1}^{p} \Pro\big((y^{(j)}, x^{(j)})| \w, w_0\big).
+\end{equation}
 \end{document}
