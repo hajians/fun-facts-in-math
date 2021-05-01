@@ -6,9 +6,12 @@ jobs:
     name: Compile Latex file
     steps:
     - uses: actions/checkout@v1
+      with:
+          ref: ${{ github.ref }}
     - name: Compilation
       uses: vinay0410/tectonic-action@master
       env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         tex_path: 'fun_facts_in_math.tex'
+        push: 'yes'
