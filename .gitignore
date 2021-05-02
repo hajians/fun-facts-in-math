@@ -1,2 +1,7 @@
 *.aux
 *.pdf
+*.log
+*.toc
+*.gz
+.ipynb_checkpoints
+*~
