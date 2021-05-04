@@ -1,7 +1,11 @@
 \documentclass[11pt]{article}
 
-\usepackage{sectsty} \usepackage{graphicx} \usepackage{ulem}
-\usepackage{amsmath} \usepackage{amsfonts}
+\usepackage{sectsty} 
+\usepackage{graphicx} 
+\usepackage{ulem}
+\usepackage{amsmath} 
+\usepackage{amsfonts}
+\usepackage{pgf}
 
 \newcommand{\w}{\textbf{w}} 
 \newcommand{\R}{\mathbb{R}} 
@@ -13,6 +17,83 @@
 \newcommand{\Lsp}{\mathrm{L}}
 \newcommand{\dx}{\text{d}x} 
 \newcommand{\norm}[1]{\Vert #1 \Vert}
+
+\newcommand{\Arr}[2]{
+	\left(
+		\begin{array}{c}
+		{#1} 
+		%
+		\\
+		%
+		{#2}
+		\end{array}
+	\right)
+}
+\newcommand{\Arrtri}[3]{
+	\left(
+		\begin{array}{c}
+		{#1} 
+		%
+		\\
+		%
+		{#2}
+		\\
+		%
+		{#3}		
+		\end{array}
+	\right)
+}
+\newcommand{\ARR}[4]{
+	\left(
+		\begin{array}{c}
+		{#1} 
+		%
+		\\
+		%
+		{#2}
+		\\
+		{#3} 
+		%
+		\\
+		%
+		{#4}		
+		\end{array}
+	\right)
+}
+\newcommand{\MAT}[4]{
+	\left[
+		\begin{array}{c|c}
+		{#1} 
+		%
+		&
+		%
+		{#2}
+		\\ \hline
+		{#3} 
+		%
+		&
+		%
+		{#4}		
+		\end{array}
+	\right]
+}
+\newcommand{\MATT}[4]{
+	\left[
+		\begin{array}{cc}
+		{#1} 
+		%
+		&
+		%
+		{#2}
+		\\
+		{#3} 
+		%
+		&
+		%
+		{#4}		
+		\end{array}
+	\right]
+}
 
 \usepackage{xcolor}
 
@@ -171,19 +252,19 @@ and the centered feature matrix by $X_w = [X_{1, c}, \dots, X_{K,
 X_w^{} X_w^{\top}$. We now focus on defining inter-class spread. Let
 us define the global centroid of the data by
 \begin{equation}
-	c := \frac{1}{p} \sum_{i=1}^{p} x^{(i)}.
+  c := \frac{1}{p} \sum_{i=1}^{p} x^{(i)}.
 \end{equation}
 We would like to measure the distance of the centroid of each cluster
 to the global centroid. Therefore we define the following matrix
 \begin{equation}
-	\bar{X} := [ \underbrace{(c_1 - c), \dots, (c_1 - c)}_{p_1
-            \text{ times}}, \dots, \underbrace{(c_k - c), \dots, (c_k
-            - c)}_{p_k \text{ times}}] \in \R^{n \times p},
+  \bar{X} := [ \underbrace{(c_1 - c), \dots, (c_1 - c)}_{p_1
+      \text{ times}}, \dots, \underbrace{(c_k - c), \dots, (c_k
+      - c)}_{p_k \text{ times}}] \in \R^{n \times p},
 \end{equation}
 whose columns measures the distance of each centroid to the global
 centroid. Finally the inter-class spread matrix can be defined by
 \begin{equation}
-	S_b := \bar{X} \bar{X}^{\top}.
+  S_b := \bar{X} \bar{X}^{\top}.
 \end{equation}
 
 As we discussed earlier in this section, we would like to maximize
@@ -191,8 +272,8 @@ inter-class spread while minimizing the intra-class spread. To do so
 we can scalarize the above two metrics by defining the following
 scalar function:
 \begin{equation}
-	H(\q) := \frac{ \q^{\top}_{} S_{b}^{} \q }{\q^{\top}_{}
-          S_{w}^{} \q}, \quad \forall q \in \R^{n}, q \not = 0.
+  H(\q) := \frac{ \q^{\top}_{} S_{b}^{} \q }{\q^{\top}_{}
+    S_{w}^{} \q}, \quad \forall q \in \R^{n}, q \not = 0.
 \end{equation}
 Any direction $\q$ that maximizes $H(\q)$ can be viewed as a desirable
 direction maximizes the ratio of the spread of inter-class over the
@@ -207,38 +288,81 @@ corresponds to the maximum eigenvalue of $S_w^{-1} S_b$ and the
 optimum direction is the corresponding eigenvector of $S_w^{-1} S_b$,
 i.e.,
 \begin{equation}
-	v_{\max} = \arg \max_{\q\in \R^{n}} H(\q),
+  v_{\max} = \arg \max_{\q\in \R^{n}} H(\q),
 \end{equation}
 where
 \begin{equation}
-	S_w^{-1} S_b \, v_{\max} = \lambda_{\max} \, v_{\max}.
+  S_w^{-1} S_b \, v_{\max} = \lambda_{\max} \, v_{\max}.
 \end{equation}
-For the case where $S_w$ is only semi-definite, we can use the
+For the case where $S_w$ is only semi-definite, we cannot use the
 argument that $S_w^{-1}$ exists. One approach would be to regularize
 $S_w$ to an s.p.d. matrix by adding an s.p.d. matrix, e.g.,
 \begin{equation}
-	S_{w,\varepsilon} := S_w + \varepsilon I, \quad \varepsilon >
-        0.
+  S_{w,\varepsilon} := S_w + \varepsilon I, \quad \varepsilon >
+  0.
 \end{equation}
 Here $\varepsilon$ is a small positive real number.
-\subsection{Logistic regression}
-Logistic regression is considered as a simple method for the classification problem. It is considered as a discriminative classification method since it models the posterior probability of the target variable directly. Let us denote as before the dataset by the tuple $(X, y)$ where $X \in \R^{n
-  \times p}$ is the so-called feature matrix, and $y \in \B^{p}$ is the target vector. Here $p$ denotes the number of data points in the dataset and $n$ is the dimension of the feature space. Logistic regression models the posterior probability of the target variable directly through a sigmoid function, i.e.,
+\subsubsection{Numerical example}
+In this section, we would like to demonstrate the effectiveness of LDA on an annotate data set. We consider a synthetic dataset originating from two Gaussian distribution (corresponding to two distinct classes, i.e., $K=2$) with the probability density functions 
 \begin{equation}
-	\Pro(y=1|x) = \sigma( \w^\top x + w_0), \quad \w \in \R^{n}, w_0 \in \R,
+	f_X(x) \propto e^{-\frac12 (x - \mu_{k}^{})^\top 
+	\Sigma^{-1}_{k} (x - \mu_{k}^{})}, \quad k = 1, 2,
+\end{equation}
+with covariance matrix
+\begin{equation}
+	\Sigma_1 = \Sigma_2 = 
+	\MATT{5}{2}{2}{1},
+\end{equation}
+and means
+\begin{equation}
+	\mu_1 = \Arr{0}{0}, \quad \mu_2 = \Arr{0}{10}.
+\end{equation}
+For a realization of this dataset see Figure \ref{fig:synthetic-data-lda} (left). In Figure \ref{fig:synthetic-data-lda} (right) we find the projection of the dataset in the subspace defined by $\q$. Note that the two classes are well-separated in this subspace.
+\begin{figure}
+    \begin{center}
+        \scalebox{0.6}{\input{examples/lda/synthetic_data.pgf}}
+        \scalebox{0.6}{\input{examples/lda/lda_projection.pgf}}
+    \end{center}
+    \caption{Synthetic dataset from two Gaussian distributions with the LDA direction $\q$ as black arrow (left), and projected dataset into the subspace defined by LDA (right).}
+    \label{fig:synthetic-data-lda}
+\end{figure}
+\subsection{Logistic regression}
+Logistic regression is considered as a simple method for the
+classification problem. It is considered as a discriminative
+classification method since it models the posterior probability of the
+target variable directly. Let us denote as before the dataset by the
+tuple $(X, y)$ where $X \in \R^{n \times p}$ is the so-called feature
+matrix, and $y \in \B^{p}$ is the target vector. Here $p$ denotes the
+number of data points in the dataset and $n$ is the dimension of the
+feature space. Logistic regression models the posterior probability of
+the target variable directly through a sigmoid function, i.e.,
+\begin{equation}
+  \Pro(y=1|x) = \sigma( \w^\top x + w_0), \quad \w \in \R^{n}, w_0 \in \R,
 \end{equation}
 and from the definition of the probabilities we have that $\Pro(y=0|x) = 1 - \Pro(y=1|x)$.
 
-Here $\sigma(a) := 1/(1+\exp(-a))$. Note that when $\w^\top x + w_0 = 0$ then $\Pro(y=0|x) = \Pro(y=1|x) = \frac12$ and we can conclude that the logistic regression model does not prefer one class over the other given the input $x$. Such a $(n-1)$-dimensional hyperplane is called the decision surface. Logistic regression is called a linear classification method since its decision boundary is a linear function of the input $x$.
+Here $\sigma(a) := 1/(1+\exp(-a))$. Note that when $\w^\top x + w_0 =
+0$ then $\Pro(y=0|x) = \Pro(y=1|x) = \frac12$ and we can conclude that
+the logistic regression model does not prefer one class over the other
+given the input $x$. Such a $(n-1)$-dimensional hyperplane is called
+the decision surface. Logistic regression is called a linear
+classification method since its decision boundary is a linear function
+of the input $x$.
 
-In order to find optimal parameters of logistic regression model, i.e., $\w$ and $w_0$, we first form a log-likelihood function over the posterior distribution and then maximize it. More precisely for a given logistic model (fixed $\w$ and $w_0$) the probability of observing $(y^{(j)}, x^{(j)})$ is given by 
+In order to find optimal parameters of logistic regression model,
+i.e., $\w$ and $w_0$, we first form a log-likelihood function over the
+posterior distribution and then maximize it. More precisely for a
+given logistic model (fixed $\w$ and $w_0$) the probability of
+observing $(y^{(j)}, x^{(j)})$ is given by
 \begin{equation}
-	\Pro\big((y^{(j)}, x^{(j)})| \w, w_0\big) = 
-	\Pro(y^{(j)}=1|x^{(j)})^{y^{(j)}} \cdot
-	\Pro(y^{(j)}=0|x^{(j)})^{(1-y^{(j)})}.
+  \Pro\big((y^{(j)}, x^{(j)})| \w, w_0\big) = 
+  \Pro(y^{(j)}=1|x^{(j)})^{y^{(j)}} \cdot
+  \Pro(y^{(j)}=0|x^{(j)})^{(1-y^{(j)})}.
 \end{equation}
-Since observations of the dataset are i.i.d.~we can conclude that the probability of observing the dataset given the model is the multiplication of the above likelihood function, i.e.,
+Since observations of the dataset are i.i.d.~we can conclude that the
+probability of observing the dataset given the model is the
+multiplication of the above likelihood function, i.e.,
 \begin{equation}
-	\Pro\big((y, X)| \w, w_0\big) = \prod_{j=1}^{p} \Pro\big((y^{(j)}, x^{(j)})| \w, w_0\big).
+  \Pro\big((y, X)| \w, w_0\big) = \prod_{j=1}^{p} \Pro\big((y^{(j)}, x^{(j)})| \w, w_0\big).
 \end{equation}
 \end{document}
