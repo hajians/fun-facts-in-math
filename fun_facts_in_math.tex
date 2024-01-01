@@ -7,17 +7,19 @@
 \usepackage{amsfonts}
 \usepackage{pgf}
 
-\newcommand{\w}{\textbf{w}} 
-\newcommand{\R}{\mathbb{R}} 
+\newcommand{\w}{\textbf{w}}
+\newcommand{\x}{\textbf{x}} 
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}} 
 \newcommand{\B}{\mathbb{B}} 
 \newcommand{\Ex}{\mathbb{E}}
 \newcommand{\Pro}{\mathbb{P}} 
 \newcommand{\D}{\mathcal{D}}
-\newcommand{\q}{\textsf{q}} 
+\newcommand{\q}{\textsf{q}}
 \newcommand{\Lsp}{\mathrm{L}}
 \newcommand{\dx}{\text{d}x} 
 \newcommand{\norm}[1]{\Vert #1 \Vert}
-
+\newcommand{\bo}[1]{{\mathbf #1}}
 \newcommand{\Arr}[2]{
 	\left(
 		\begin{array}{c}
@@ -94,6 +96,9 @@
 		\end{array}
 	\right]
 }
+
+\newtheorem{example}{Example}[section]
+\newtheorem{remark}{Remark}[section]
 
 \usepackage{xcolor}
 
@@ -283,7 +288,7 @@ intra-class simultaneously.
 
 Let us suppose for the moment that $S_w$ is symmetric positive
 definite (s.p.d.). Then using Rayleigh quotient of Section
-\ref{sec:rayleigh} we can conclude that the maximum value of $H(q)$
+\ref{sec:rayleigh} we can conclude that the maximum value of $H(\q)$
 corresponds to the maximum eigenvalue of $S_w^{-1} S_b$ and the
 optimum direction is the corresponding eigenvector of $S_w^{-1} S_b$,
 i.e.,
@@ -365,4 +370,123 @@ multiplication of the above likelihood function, i.e.,
 \begin{equation}
   \Pro\big((y, X)| \w, w_0\big) = \prod_{j=1}^{p} \Pro\big((y^{(j)}, x^{(j)})| \w, w_0\big).
 \end{equation}
+\section{Kernel methods}
+In this section we will go through a class of methods known as {\it kernel
+methods} for regression and classification. Let us start from a
+regression model defined by
+\begin{equation}
+  f_\w(\x) = \w^\top \phi(\x), \quad \forall \x \in \R^{d_0},
+\end{equation}
+where $\x$ is the original feature inputs which are transformed using a
+feature map $\phi: \R^{d_0} \rightarrow \R^{d}$ and $\w \in \R^{d}$ is
+the weight that completes the definition of the method. We refer to
+$\R^{d}$ as the feature space while $\R^{d_0}$ is the initial input
+space. In this section we assume that the feature space has a much
+higher dimensionality compare to initial feature space, i.e., $d \gg
+d_0$.
+
+\begin{example} \label{example:kernel}
+  Suppose that we have an image of size $16 \times 16$ pixels where
+  each pixel's intensity is represented by an entry in a vector
+  denoted by $\x \in \R^{d_0}$. Suppose we would like to construct
+  another vector consisting of all monomials of degree upto $m$, e.g.,
+  for $m=2$, we have
+  \begin{equation}
+    \phi(\x) = (x_1, \dots, x_{d_0}, x_1 x_2, x_1 x_3, \dots,
+    x_1^2, \dots, x_{d_0}^2)^\top \in \R^{d},
+  \end{equation}
+  where $d = \Arr{2+  d_0 - 1}{d_0 - 1} = O(d_0^2)$. In general, if we
+  are interested in arbitrary $m \in \N^+$, we have
+  $d = O\big( \frac{d_0^m}{m!} \big)$.
+\end{example}
+
+Suppose we have a set of data points $\{(\x_i, t_i)\}_{i=1}^{N}$ which
+we can use to fit weights, i.e., $\w$. In order to do so, let us setup
+a loss (objective) function and an optimization, i.e.,
+\begin{equation}
+  J(\w) := \frac12 \sum_{i=1}^{N} (t_i - \w^\top \phi(\x_i))^2 +
+  \frac{\lambda}{2} \norm{\w}_2^2,
+\end{equation}
+and find $\w^\star$ such that
+\begin{equation}
+  \w^\star = \arg \min_{\w \in \R^{d}} J(\w).
+\end{equation}
+
+In order to solve for the optimal weights we need to take the
+derivative of $J(\w)$ with respect to its argument and set it to
+zero:
+\begin{equation}
+  \nabla J(\w) = \lambda \w - \sum_{i=1}^{N} (t_i - \w^\top \phi(\x_i)) \phi(\x_i)
+  = 0.
+\end{equation}
+In order to find the solution to this equation, we first define
+$X:=\big[\phi(\x_1), \dots, \phi(x_d) \big]$ and $\bo{t} := (t_1,
+\dots, t_N)^\top$. Then the optimal
+$\w^\star$ reads
+\begin{equation}
+  \big( \lambda I_d + X X^\top \big) \w^\star = X \bo{t}.
+\end{equation}
+
+On the other hand, let us rewrite the optimal weights in the following form
+\begin{equation}
+  \w^\star = \frac{1}{\lambda} X \bo{t} - X X^\top \w^\top
+  = X \Big( \frac{1}{\lambda} \bo{t} - X^\top \w^\star \Big) =: X \bo{a},
+\end{equation}
+where $\bo{a} \in \R^{N}$. Substituting $\w^\star = X \bo{a}$ into
+the function definition yields
+\begin{equation}
+  f^\star(\x) = \bo{a}^\top X^\top \phi(x) = \sum_{j=1}^{N} a_i
+  \phi(\x_i)^\top \phi(x) \quad \forall \x \in \R^{d_0}.
+\end{equation}
+This implies that although we search in a rich function space for the
+optimal weights, i.e., $\R^d$, the optimal solution lies in a much
+smaller space, namely the space spanned by the training dataset
+$\{\phi(\x_i)\}_{i=1}^{N}$. Often the problem is posed in a setting
+where $N \ll d$, e.g., see Example \ref{example:kernel}. Therefore it
+might be much cheaper to pose the original function space and
+optimization in terms of $\bo{a}$. We call this representation of the
+problem the {\it dual representation}.
+
+The dual representation in terms of $\bo{a}$ is the following:
+\begin{equation}
+  J(\bo{a}) := \frac12 \sum_{i=1}^{N} (t_i -
+  \bo{a}^\top X^\top  \phi(\x_i))^2 +
+  \frac{\lambda}{2} \bo{a}^\top X^\top X \bo{a},
+\end{equation}
+and $\bo{a}^\star := \arg\min_{\bo{a}\in\R^N} J(\bo{a})$.
+The optimal $\bo{a}^\star$ satisfies
+\begin{equation}
+  (\lambda I_N + X^\top X) \bo{a}^\star = \bo{t}.
+\end{equation}
+The solution of the primal and dual representations coincide in the
+sense that
+\begin{equation}
+  \bo{w}^\star = X \bo{a}^\star.
+\end{equation}
+\begin{remark}
+  The two function spaces of the primal and dual representations do
+  not coincide. Observe that $\bo{a}\in\R^N$ while $\w \in \R^d$ and
+  $N \ll d$. Therefore the primal representation has a richer function
+  space, however the optimal solution of both formulations lie in $\R^N$.
+\end{remark}
+\subsection{Kernel trick}
+Recall that in the dual representation the regression function is
+\begin{equation}
+  f_{\bo{a}}(\x) = \sum_{j=1}^{N} a_j \phi(\x_j)^\top \phi(\x).
+\end{equation}
+Note that we can replace $\phi(\x_i)^\top \phi(\x)$ by a {\it kernel}
+function $k(\x_i, \x) = \phi(\x_i)^\top \phi(\x)$ in order to avoid
+carrying around the high dimensional map $\phi(\x)$. More precisely,
+we need to find a kernel function $k(\x, \bo{y})$ that admits a
+decomposition $k(\x, \bo{y}) = \phi(\x)^\top \phi(\bo{y})$ for some
+$\phi(\cdot)$. A necessary and sufficient condition for a valid kernel
+function is that the matrix $K$, whose entries are $K_{mn} = k(\x_m,
+\x_n)$ for all sets of $\{\x_i\}_{i=1}^{N}$, is positive
+semi-definite. The matrix $K$ is called {\it Gram matrix}.
+\begin{example}
+  The kernel corresponding to the problem posed in Example
+  \ref{example:kernel} is $k(\x, \x') = (\x^\top \x')^2$ for all $\x,
+  \x' \in \R^{d_0}$.
+\end{example}
+
 \end{document}
