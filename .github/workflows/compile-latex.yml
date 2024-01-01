@@ -20,8 +20,11 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: Run Tectonic
         run: tectonic fun_facts_in_math.tex
-      - name: Upload pdf
-        uses: actions/upload-artifact@v3
-        with:
-          name: main
-          path: fun_facts_in_math.pdf
+      - name: Push PDF
+        uses: actions/checkout@v3
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add fun_facts_in_math.pdf
+          git commit -m "generated PDF"
+          git push
