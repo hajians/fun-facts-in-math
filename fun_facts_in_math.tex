@@ -13,6 +13,7 @@
 \newcommand{\N}{\mathbb{N}} 
 \newcommand{\B}{\mathbb{B}} 
 \newcommand{\Ex}{\mathbb{E}}
+\newcommand{\Var}{\mathbb{V}}
 \newcommand{\Pro}{\mathbb{P}} 
 \newcommand{\D}{\mathcal{D}}
 \newcommand{\q}{\textsf{q}}
@@ -121,8 +122,66 @@
 
 %--Paper--
 \section{(Numerical) linear algebra}
-\subsection{\red{Rayleigh quotient}} \label{sec:rayleigh}
-\section{Probability theory}
+\subsection{Rayleigh quotient} \label{sec:rayleigh}
+Rayleigh quotient is a quotient defined for symmetric matrices and can
+be used as a technique for estimating minimum and maximum eigenvalues
+of a symmetric matrix. Let $A \in \R^{n\times n}$ be a symmetric
+matrix, i.e., $A=A^\top$. Then the Rayleigh quotient is defined as
+\begin{equation}
+  R(A, \w) := \frac{\w^\top A \w}{\w^\top \w}, \quad \forall \w \in \R^{n}.
+\end{equation}
+It can be shown for a symmetric matrix, $A$, and
+its eigenvalues $\{\lambda\}_{i=1}^{n}$, we have
+\begin{equation}
+  \lambda_{\max} = \max_{\w \in \R^n} R(A, \w),
+  \lambda_{\min} = \min_{\w \in \R^n} R(A, \w),
+\end{equation}
+and therefore
+\begin{equation}
+  \min_{\w \in \R^n} R(A, \w) \leq \lambda_i \leq \max_{\w \in \R^n}
+  R(A, \w), \quad \forall i = 1, \dots, n.
+\end{equation}
+\section{Probability theory and statistics}
+\subsection{Terminologies}
+In this section we introduce some terminologies used in statistics.
+\subsubsection{\color{red}Statistic and estimators}
+A statistic or sample statistic is a quantity that is computed using a
+sample of a population. An estimator is a statistic used to estimate a
+{\it quantity of interest} of the population. For example the mean of a
+sample from a population is a statistic that can be used as an
+estimator for the mean of the population (more precisely, mean of its
+probability distribution).
+
+In the following we will introduce properties of the
+estimators. Suppose we are interested in knowing a quantity of
+interest which we denote by $\theta$ of a population which is
+described through a random variable, $X$. For example the average
+height in a population where the height of an individual in the
+population is a random variable denoted by $X$. In this example $\theta
+:= \Ex[X]$.
+
+Let us denote an estimator of $\theta$ by $\hat{\theta}(X)$ (note that
+$\hat{\theta}(X)$ is stochastic but given an observation $x$,
+$\hat{\theta}(x)$ is a fixed value). Then the estimator $\hat{\theta}$
+is said to be:
+\begin{itemize}
+\item Unbiased if $\Ex[\hat{\theta}] = \theta$. In our example, the
+  estimator $\hat{\theta}(X) = \frac{1}{N}\sum_{i=1}^{N} X_i$ where
+  $\{X_i\}_{i=1}^{N}$ are i.i.d. random samples whose probability
+  densities is same as $X$ is an unbiased estimator of $\Ex[X]$.  
+\item Minimum variance unbiased estimator: if the estimator is
+  unbiased and its variance $\Var[\hat{\theta}] := \Ex[(\hat{\theta}
+    - \Ex[\hat{\theta}])^2]$ is the smallest among all unbiased
+  estimators.
+  \item Consistent: if a sequence of estimators
+    $\{\hat{\theta}_n\}_{n=1}^{\infty}$ converges to the quantity of
+    the interest when $n \rightarrow \infty$. That is for all $\varepsilon
+    >0$, we have
+    \begin{equation}
+      \lim_{n \rightarrow \infty} \Pro \big[ |\hat{\theta}_n - \theta| <
+        \varepsilon \big] = 1.  
+    \end{equation}
+\end{itemize}
 \subsection{Chebyshev inequality}
 Let $X$ be a continuous random variable with density function
 $f_X(x)$, mean $\mu$ and standard deviation $\sigma$. Then the
@@ -205,7 +264,6 @@ i.e., $y^{(j)}$ corresponds to the class of the data point $j$, for
 all $j=1,\dots, p$. We consider that each data point can belong to one
 and only one class, and we denote the total number of classes by
 $K$. That is $y^{(j)} \in \{1,\dots, K\}$ for all $j=1,\dots, p$.
-
 
 \subsubsection{Scatter matrices and spread}
 Let us denote the projection of the features of a data point,
