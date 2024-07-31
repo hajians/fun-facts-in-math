@@ -3,10 +3,13 @@
 \usepackage{sectsty} 
 \usepackage{graphicx} 
 \usepackage{ulem}
-\usepackage{amsmath} 
+\usepackage{amsmath}
+\usepackage{amsthm}
 \usepackage{amsfonts}
 \usepackage{pgf}
+\usepackage{mathtools}
 
+\DeclarePairedDelimiter{\ceil}{\lceil}{\rceil}
 \newcommand{\w}{\textbf{w}}
 \newcommand{\x}{\textbf{x}} 
 \newcommand{\R}{\mathbb{R}}
@@ -99,6 +102,7 @@
 }
 
 \newtheorem{example}{Example}[section]
+\newtheorem{theorem}{Theorem}[section]
 \newtheorem{remark}{Remark}[section]
 
 \usepackage{xcolor}
@@ -243,7 +247,7 @@ and therefore
   1- \frac{\sigma_{X}^2}{n \varepsilon^2} \leq \Pro(|\bar{X}_n-\mu|
   \leq \varepsilon) \leq 1, \quad \forall \varepsilon > 0.
 \end{equation}
-Letting $n \rightarrow 0$ yields that $ \Pro(|\bar{X}_n-\mu| \leq
+Letting $n \rightarrow \infty$ yields that $ \Pro(|\bar{X}_n-\mu| \leq
 \varepsilon) \rightarrow 1$ for all $\varepsilon > 0$.
 
 \section{Pattern recognition}
@@ -428,7 +432,7 @@ multiplication of the above likelihood function, i.e.,
 \begin{equation}
   \Pro\big((y, X)| \w, w_0\big) = \prod_{j=1}^{p} \Pro\big((y^{(j)}, x^{(j)})| \w, w_0\big).
 \end{equation}
-\section{Kernel methods}
+\subsection{Kernel methods}
 In this section we will go through a class of methods known as {\it kernel
 methods} for regression and classification. Let us start from a
 regression model defined by
@@ -527,7 +531,7 @@ sense that
   $N \ll d$. Therefore the primal representation has a richer function
   space, however the optimal solution of both formulations lies in $\R^N$.
 \end{remark}
-\subsection{Kernel trick}
+\subsubsection{Kernel trick}
 Recall that in the dual representation the regression function is
 \begin{equation}
   f_{\bo{a}}(\x) = \sum_{j=1}^{N} a_j \phi(\x_j)^\top \phi(\x).
@@ -547,4 +551,63 @@ semi-definite. The matrix $K$ is called {\it Gram matrix}.
   \x' \in \R^{d_0}$.
 \end{example}
 
+\subsection{Conformal prediction}
+A classification method of type $f(\x) \in \R^{n}$ generates point
+estimates which approximates $\Pro(Y=k
+|X=\x)$ for $q=1,\dots,K$. In
+situations where assigning a class to an input is not easy, e.g., an
+image classification when the image is not clear, we might attempt to
+generate a set of possible classes. {\it Conformal prediction} method
+attempts to generate such sets from the output of a model. In this
+respect conformal prediction is a model agnostic method.
+
+More precisely, for a given test data point $(\x_\text{test},
+y_\text{test})$, where $\x_\text{test} \in \R^n$ and $y_\text{text}
+\in \{1, \dots, K\}$, we would like to construct a set $C(X_\text{test})$
+such that with high probability $y_\text{test} \in
+C(X_\text{test})$. In the following we provide an algorithm for
+generating such a $C(X_\text{test})$:
+\begin{enumerate}
+  \item Given a calibration set $\{(\x_i, y_i)\}_{i=1}^{p}$, a test
+    data point $(\x_\text{test},
+    y_\text{test})$ and a parameter $\alpha$.
+  \item Compute error terms (also called conformal scores) $s_i = 1 -
+    f_{y_i}(\x_i)$ and their $\frac{\ceil{(1+p)(1-\alpha)}}{p}$
+    quantile denoted by $\hat{q}$.
+  \item Construct the set of potential classes by
+    \begin{equation*}
+      C(\x_\text{test}) = \{i : 1- f_i(\x_\text{test}) \leq \hat{q}, \quad 
+      \forall i = 1, \dots, K\}.
+    \end{equation*}
+\end{enumerate}
+%% 
+We will show in this section that the above procedure produces
+conformal sets that contain the true class with the following
+probability estimates:
+\begin{equation*}
+  1 - \alpha \leq \Pro\big(y_\text{test} \in C(\x_\text{test})\big) \leq
+  1 - \alpha + \frac{1}{n+1}.
+\end{equation*}
+
+\begin{theorem} Suppose the calibration set $\{(\x_i,
+  y_i)\}_{i=1}^{p}$ and the test data point $(\x_\text{test},
+  y_\text{test})$ are i.i.d. Moreover, let $C(\x_\text{test})$ be
+  generated with the above procedure. Then the probability of the true
+  class be in $C(\x_\text{test})$ is given by
+  $$ \Pro\big(y_\text{test} \in C(\x_\text{test})\big) =
+  \frac{\ceil{(1+p)(1-\alpha)}}{p+1}.
+  $$
+\end{theorem}
+\begin{proof}
+  Let us, without loss of generality, assume that the errors
+  (conformal scores) $s_i$ are sorted. Then the probability that
+  $s_\text{test} = 1 - f_{y_\text{test}}(\x_\text{test})$ is less than
+  $s_{\ceil{(1+p)(1-\alpha)}}$ is
+  $$ \Pro(s_\text{test} \leq s_{\ceil{(1+p)(1-\alpha)}}) =
+  \frac{\ceil{(1+p)(1-\alpha)}}{p+1}.
+  $$
+  Moreover note that the set of events where $s_\text{test} \leq
+  s_{\ceil{(1+p)(1-\alpha)}}$ is same as $y_\text{test} \in
+  C(\x_\text{test})$. This concludes the result of the theorem.
+\end{proof}
 \end{document}
